@@ -4,7 +4,7 @@ export default {
     inlineCss: true,
     useCache: true,
     reactOwnerStack: true,
-    newDevOverlay: true
+    newDevOverlay: true,
   },
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -12,8 +12,8 @@ export default {
       {
         protocol: 'https',
         hostname: 'cdn.shopify.com',
-        pathname: '/s/files/**'
-      }
-    ]
-  }
+        pathname: '/s/files/**',
+      },
+    ],
+  },
 };
