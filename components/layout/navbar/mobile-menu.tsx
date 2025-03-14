@@ -35,7 +35,7 @@ export default function MobileMenu({ menu }: { menu: Menu[] }) {
       <button
         onClick={openMobileMenu}
         aria-label="Open mobile menu"
-        className="flex h-11 w-11 items-center justify-center rounded-md border border-neutral-200 text-black transition-colors md:hidden dark:border-neutral-700 dark:text-white"
+        className="flex h-11 w-11 items-center justify-center rounded-md border border-neutral-200 text-black transition-colors dark:border-neutral-700 dark:text-white"
       >
         <Bars3Icon className="h-4" />
       </button>
@@ -76,20 +76,36 @@ export default function MobileMenu({ menu }: { menu: Menu[] }) {
                     <Search />
                   </Suspense>
                 </div>
-                {menu.length ? (
-                  <ul className="flex w-full flex-col">
-                    {menu.map((item: Menu) => (
-                      <li
-                        className="py-2 text-xl text-black transition-colors hover:text-neutral-500 dark:text-white"
-                        key={item.title}
-                      >
-                        <Link href={item.path} prefetch={true} onClick={closeMobileMenu}>
-                          {item.title}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                ) : null}
+
+                <ul className="flex w-full flex-col">
+                  <li className="py-2 text-xl text-black transition-colors hover:text-neutral-500 dark:text-white">
+                    <Link
+                      href="/search"
+                      onClick={closeMobileMenu}
+                      prefetch={true}
+                    >
+                      All
+                    </Link>
+                  </li>
+                  <li className="py-2 text-xl text-black transition-colors hover:text-neutral-500 dark:text-white">
+                    <Link
+                      href="/search/card"
+                      onClick={closeMobileMenu}
+                      prefetch={true}
+                    >
+                      Cards
+                    </Link>
+                  </li>
+                  <li className="py-2 text-xl text-black transition-colors hover:text-neutral-500 dark:text-white">
+                    <Link
+                      href="/search/cap"
+                      onClick={closeMobileMenu}
+                      prefetch={true}
+                    >
+                      Caps
+                    </Link>
+                  </li>
+                </ul>
               </div>
             </Dialog.Panel>
           </Transition.Child>
