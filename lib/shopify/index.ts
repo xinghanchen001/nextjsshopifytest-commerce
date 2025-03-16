@@ -213,18 +213,36 @@ const reshapeProducts = (products: ShopifyProduct[]) => {
   return reshapedProducts;
 };
 
-export async function createCart(): Promise<Cart> {
+export async function createCart(
+  lines?: {
+    merchandiseId: string;
+    quantity: number;
+    attributes?: { key: string; value: string }[];
+  }[]
+): Promise<Cart> {
   const res = await shopifyFetch<ShopifyCreateCartOperation>({
     query: createCartMutation,
+    variables: {
+      lineItems: lines,
+    },
   });
 
   return reshapeCart(res.body.data.cartCreate.cart);
 }
 
 export async function addToCart(
-  lines: { merchandiseId: string; quantity: number }[]
+  lines: {
+    merchandiseId: string;
+    quantity: number;
+    attributes?: { key: string; value: string }[];
+  }[]
 ): Promise<Cart> {
-  const cartId = (await cookies()).get('cartId')?.value!;
+  const cartId = (await cookies()).get('cartId')?.value;
+
+  if (!cartId) {
+    return createCart(lines);
+  }
+
   const res = await shopifyFetch<ShopifyAddToCartOperation>({
     query: addToCartMutation,
     variables: {
@@ -232,6 +250,11 @@ export async function addToCart(
       lines,
     },
   });
+
+  if (res.status === 404) {
+    return createCart(lines);
+  }
+
   return reshapeCart(res.body.data.cartLinesAdd.cart);
 }
 

@@ -5,15 +5,18 @@ import clsx from 'clsx';
 import { addItem } from 'components/cart/actions';
 import { useProduct } from 'components/product/product-context';
 import { Product, ProductVariant } from 'lib/shopify/types';
+import { textCustomizationToAttributes } from 'lib/types/customization';
 import { useActionState } from 'react';
 import { useCart } from './cart-context';
 
 function SubmitButton({
   availableForSale,
-  selectedVariantId
+  selectedVariantId,
+  isCustomizationRequired,
 }: {
   availableForSale: boolean;
   selectedVariantId: string | undefined;
+  isCustomizationRequired?: boolean;
 }) {
   const buttonClasses =
     'relative flex w-full items-center justify-center rounded-full bg-blue-600 p-4 tracking-wide text-white';
@@ -22,7 +25,9 @@ function SubmitButton({
   if (!availableForSale) {
     return (
       <button disabled className={clsx(buttonClasses, disabledClasses)}>
-        Out Of Stock
+        {isCustomizationRequired
+          ? 'Please Customize Hat First'
+          : 'Out Of Stock'}
       </button>
     );
   }
@@ -46,7 +51,7 @@ function SubmitButton({
     <button
       aria-label="Add to cart"
       className={clsx(buttonClasses, {
-        'hover:opacity-90': true
+        'hover:opacity-90': true,
       })}
     >
       <div className="absolute left-0 ml-4">
@@ -70,6 +75,20 @@ export function AddToCart({ product }: { product: Product }) {
   );
   const defaultVariantId = variants.length === 1 ? variants[0]?.id : undefined;
   const selectedVariantId = variant?.id || defaultVariantId;
+
+  // Check if this is the customizable hat product
+  const isCustomizableHat = product.title === 'Customizable Hat';
+
+  // Prepare attributes for customization if needed
+  const attributes =
+    isCustomizableHat && state.customization?.line1
+      ? textCustomizationToAttributes(state.customization)
+      : undefined;
+
+  // Validate that line1 is provided for customizable hat
+  const isCustomizationValid =
+    !isCustomizableHat || (isCustomizableHat && state.customization?.line1);
+
   const addItemAction = formAction.bind(null, selectedVariantId);
   const finalVariant = variants.find(
     (variant) => variant.id === selectedVariantId
@@ -78,13 +97,17 @@ export function AddToCart({ product }: { product: Product }) {
   return (
     <form
       action={async () => {
-        addCartItem(finalVariant, product);
+        // Add attributes to cart item if available
+        addCartItem(finalVariant, product, attributes);
         addItemAction();
       }}
     >
       <SubmitButton
-        availableForSale={availableForSale}
+        availableForSale={availableForSale && isCustomizationValid}
         selectedVariantId={selectedVariantId}
+        isCustomizationRequired={
+          isCustomizableHat && !state.customization?.line1
+        }
       />
       <p aria-live="polite" className="sr-only" role="status">
         {message}

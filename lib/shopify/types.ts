@@ -22,6 +22,10 @@ export type CartProduct = {
 export type CartItem = {
   id: string | undefined;
   quantity: number;
+  attributes?: {
+    key: string;
+    value: string;
+  }[];
   cost: {
     totalAmount: Money;
   };
@@ -146,6 +150,16 @@ export type ShopifyCartOperation = {
 
 export type ShopifyCreateCartOperation = {
   data: { cartCreate: { cart: ShopifyCart } };
+  variables?: {
+    lineItems?: {
+      merchandiseId: string;
+      quantity: number;
+      attributes?: {
+        key: string;
+        value: string;
+      }[];
+    }[];
+  };
 };
 
 export type ShopifyAddToCartOperation = {
@@ -159,6 +173,10 @@ export type ShopifyAddToCartOperation = {
     lines: {
       merchandiseId: string;
       quantity: number;
+      attributes?: {
+        key: string;
+        value: string;
+      }[];
     }[];
   };
 };

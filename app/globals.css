@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
 @plugin "@tailwindcss/container-queries";
 @plugin "@tailwindcss/typography";
@@ -29,4 +30,13 @@ a,
 input,
 button {
   @apply focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50 dark:focus-visible:ring-neutral-600 dark:focus-visible:ring-offset-neutral-900;
+}
+
+/* Hat customization styles */
+.hat-text {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
