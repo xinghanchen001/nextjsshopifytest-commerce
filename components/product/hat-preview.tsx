@@ -13,12 +13,16 @@ export function HatPreview({
   textLine1: string;
   textLine2?: string;
 }) {
-  // In a real implementation, we would have different hat images for each color and style
-  // For this example, we'll use a placeholder and apply color with CSS
   const hatStyle = useMemo(() => {
-    // Default style is classic
     return style?.toLowerCase() || 'classic';
   }, [style]);
+
+  const hatColor = useMemo(() => {
+    return color?.toLowerCase() || 'black';
+  }, [color]);
+
+  // Image path based on style and color
+  const imagePath = `/images/hats/${hatStyle}/${hatColor}.png`;
 
   // Determine text position based on hat style
   const textPosition = useMemo(() => {
@@ -33,35 +37,17 @@ export function HatPreview({
     }
   }, [hatStyle]);
 
-  // Get background color based on selected color
-  const backgroundColor = useMemo(() => {
-    const colorMap: Record<string, string> = {
-      red: '#FF5555',
-      blue: '#5555FF',
-      black: '#333333',
-      white: '#FFFFFF',
-      gray: '#AAAAAA',
-    };
-
-    return colorMap[color?.toLowerCase()] || '#CCCCCC';
-  }, [color]);
-
   return (
     <div className="relative h-64 w-full overflow-hidden rounded-lg bg-gray-100">
-      <div
-        className="absolute inset-0 flex items-center justify-center"
-        style={{ backgroundColor }}
-      >
-        {/* Hat shape - this would be replaced with actual hat images */}
-        <div
-          className={`relative h-48 w-48 ${
-            hatStyle === 'beanie'
-              ? 'rounded-b-full'
-              : hatStyle === 'trucker'
-                ? 'rounded-t-lg'
-                : 'rounded-t-full'
-          }`}
-        >
+      <div className="absolute inset-0 flex items-center justify-center">
+        {/* Hat image */}
+        <div className="relative h-48 w-48">
+          <img
+            src={imagePath}
+            alt={`${color} ${style} hat`}
+            className="h-full w-full object-contain"
+          />
+
           {/* Text overlay */}
           <div
             className={`absolute inset-x-0 ${textPosition} flex flex-col items-center justify-center p-4`}
