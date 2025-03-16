@@ -97,6 +97,11 @@ export function AddToCart({ product }: { product: Product }) {
   return (
     <form
       action={async () => {
+        // Don't proceed if customization is required but not provided
+        if (isCustomizableHat && !isCustomizationValid) {
+          return;
+        }
+        
         // Add attributes to cart item if available
         addCartItem(finalVariant, product, attributes);
         addItemAction();
